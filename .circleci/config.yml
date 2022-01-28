@@ -1,0 +1,65 @@
+anchors:
+  configure-build-environment: &configure-build-environment
+    run:
+      name: Configure
+      command: |
+        yarn install
+  configure-run-build: &configure-run-build
+    run:
+      name: Configure
+      command: |
+        yarn build
+  run-tests: &run-tests
+    run:
+      name: Test
+      command: |
+        yarn test
+  cache-dependencies: &cache-dependencies
+    save_cache:
+      key: dependency-cache-{{ checksum "package.json" }}
+      paths:
+        - ./node_modules
+  load-dependency-cache: &load-dependency-cache
+    restore_cache:
+      key: dependency-cache-{{ checksum "package.json" }}
+
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: cimg/node:17.3
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  test:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *configure-build-environment
+      - *cache-dependencies
+      - *run-tests
+  build:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *configure-build-environment
+      - *cache-dependencies
+      - *configure-run-build
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  version: 2
+  ci-dev:
+    jobs:
+      - test:
+          context: xerris-dev
+      - build:
+          context: xerris-dev
+          requires:
+            - test
