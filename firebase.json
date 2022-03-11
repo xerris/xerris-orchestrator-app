@@ -1,0 +1,30 @@
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "hosting": [
+      {
+        "target": "orchestrator",
+        "dist": "/dist"
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "trailingSlash": false,
+    "headers": [
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Access-Contol-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      }
+    ]
+  }
+}

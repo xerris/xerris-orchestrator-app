@@ -22,7 +22,7 @@ registerApplication({
 registerApplication({
   name: "@xerris/pricing-calculator",
   app: () => System.import("@xerris/pricing-calculator"),
-  activeWhen: ["pricing-calculator"],
+  activeWhen: ["/pricing-calculator"],
 });
 
 start({
