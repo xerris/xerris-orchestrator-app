@@ -11,10 +11,9 @@
 
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' https: localhost:*; script-src 'unsafe-inline' 'unsafe-eval' https: localhost:*; connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' https:; object-src 'none';"
+      content="default-src 'self' https: localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: localhost:* https://xerris-dashboard-5d23c.web.app; connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' https:; object-src 'none';"
     />
     <meta name="importmap-type" content="systemjs-importmap" />
-
     <script type="systemjs-importmap">
       {
         "imports": {
@@ -43,8 +42,20 @@
         }
       }
     </script>
+    <% } else if (!isLocal) { %>
+    <script type="systemjs-importmap">
+      {
+        "imports": {
+          "@xerris/root-config": "./xerris-root-config.js",
+          "@xerris/auth-app": "https://xerris-auth-app.web.app/auth",
+          "@xerris/utility-app": "https://xerris-utility-app.web.app/utility",
+          "@xerris/sidebar-app": "https://xerris-sidebar-app.web.app/sidebar",
+          "@xerris/pricing-calculator": "https://xerris-pricing-calculator.web.app/calculator",
+          "@xerris/calendar-app": "https://xerris-calendar-app.web.app/calendar"
+        }
+      }
+    </script>
     <% } %>
-
     <script src="https://cdn.jsdelivr.net/npm/import-map-overrides@2.2.0/dist/import-map-overrides.js"></script>
     <% if (isLocal) { %>
     <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/system.js"></script>
@@ -57,9 +68,15 @@
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <main></main>
+    <% if (isLocal) { %>
     <script>
       System.import("@xerris/root-config");
     </script>
+    <% } else { %>
+    <script type="text/javascript">
+      System.import("./xerris-root-config.js");
+    </script>
+    <% } %>
     <import-map-overrides-full
       show-when-local-storage="devtools"
       dev-libs
