@@ -26,6 +26,7 @@ anchors:
     run:
       name: deploy
       command: |
+        ./node_modules/.bin/firebase use orchestrator-dev
         ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN --non-interactive
 
 # Use the latest 2.1 version of CircleCI pipeline process engine.
