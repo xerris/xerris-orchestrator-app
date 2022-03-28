@@ -33,3 +33,20 @@ A single-spa root config, which renders the HTML page and the JavaScript that re
 - A name
 - A function to load the application's code
 - A function that determines when the application is active/inactive
+
+## Switching environments && Deployment
+
+### While you can deploy to dev manually this is unnecessary as circleCI will perform a deploy to the dev environment on merging to the master branch in the github repo
+
+this project uses firebase hosting for deployment, to change deployment environments use this command:
+
+- firebase use [environment]
+
+replace [environment] with one of these:
+
+- orchestrator-dev
+- production
+
+once you are in the desired environment deploy the project using this command:
+
+firebase deploy --only hosting

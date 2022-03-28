@@ -10,7 +10,9 @@
     "prepare": "husky install",
     "build": "concurrently yarn:build:*",
     "build:webpack": "webpack --mode=production",
-    "build:types": "tsc"
+    "build:types": "tsc",
+    "prod:build": "yarn prod:build:webpack & tsc",
+    "prod:build:webpack": "webpack --mode=production --env isProd"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
