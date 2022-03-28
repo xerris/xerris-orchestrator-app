@@ -1,13 +1,17 @@
 {
   "projects": {
     "default": "xerris-dashboard-5d23c",
-    "orchestrator-dev": "xerris-dashboard-5d23c"
+    "orchestrator-dev": "xerris-dashboard-5d23c",
+    "production": "xerris-dashboard-prod"
   },
   "targets": {
     "xerris-dashboard-5d23c": {
       "hosting": {
         "orchestrator": [
           "xerris-dashboard-5d23c"
+        ],
+        "production": [
+          "xerris-dashboard-prod"
         ]
       }
     }
