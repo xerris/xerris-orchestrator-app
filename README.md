@@ -40,12 +40,13 @@ A single-spa root config, which renders the HTML page and the JavaScript that re
 
 this project uses firebase hosting for deployment, to change deployment environments use this command:
 
-- firebase use [environment]
+dev:
 
-replace [environment] with one of these:
+- firebase use default
 
-- orchestrator-dev
-- production
+prod:
+
+- firebase use production
 
 once you are in the desired environment deploy the project using this command:
 
