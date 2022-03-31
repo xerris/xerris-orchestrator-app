@@ -25,6 +25,12 @@ registerApplication({
   activeWhen: ["/pricing-calculator"],
 });
 
+registerApplication({
+  name: "@xerris/home-app",
+  app: () => System.import("@xerris/home-app"),
+  activeWhen: ["/home"],
+});
+
 start({
   urlRerouteOnly: true,
 });
