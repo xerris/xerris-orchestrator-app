@@ -13,6 +13,17 @@
       content="default-src 'self' https: localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: localhost:* https://xerris-dashboard-5d23c.web.app; connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' https:; object-src 'none';"
     />
     <meta name="importmap-type" content="systemjs-importmap" />
+    <% if (isLocal) { %>
+    <script type="systemjs-importmap">
+      {
+        "imports": {
+          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
+          "react": "https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.min.js",
+          "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.min.js"
+        }
+      }
+    </script>
+    <% } else { %>
     <script type="systemjs-importmap">
       {
         "imports": {
@@ -22,6 +33,7 @@
         }
       }
     </script>
+    <% } %>
     <link
       rel="preload"
       href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js"
@@ -65,7 +77,8 @@
           "@xerris/utility-app": "https://xerris-utility-app-prod.web.app/utility-prod",
           "@xerris/sidebar-app": "https://xerris-sidebar-app-prod.web.app/sidebar-prod",
           "@xerris/pricing-calculator": "https://xerris-pricing-calculator-prod.web.app/calculator-prod",
-          "@xerris/calendar-app": "https://xerris-calendar-app-prod.web.app/calendar-prod"
+          "@xerris/calendar-app": "https://xerris-calendar-app-prod.web.app/calendar-prod",
+          "@xerris/home-app": "https://xerris-home-app-prod.web.app/home-prod"
         }
       }
     </script>
