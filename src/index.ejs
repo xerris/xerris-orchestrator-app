@@ -7,6 +7,7 @@
 
     <title>Xerris Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
+    <script type="module" src="http://localhost:9002/src/xerris-auth-app.ts"></script>
 
     <meta
       http-equiv="Content-Security-Policy"
@@ -17,9 +18,7 @@
     <script type="systemjs-importmap">
       {
         "imports": {
-          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
-          "react": "https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.min.js",
-          "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.min.js"
+          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js"
         }
       }
     </script>
@@ -27,9 +26,7 @@
     <script type="systemjs-importmap">
       {
         "imports": {
-          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
-          "react": "https://cdn.jsdelivr.net/npm/react@16.13.1/umd/react.production.min.js",
-          "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@16.13.1/umd/react-dom.production.min.js"
+          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js"
         }
       }
     </script>
@@ -46,7 +43,7 @@
         "imports": {
           "@xerris/root-config": "//localhost:9000/xerris-root-config.js",
           "@xerris/sidebar-app": "//localhost:9001/xerris-sidebar-app.js",
-          "@xerris/auth-app": "//localhost:9002/xerris-auth-app.js",
+          "@xerris/auth-app": "//localhost:9002/src/xerris-auth-app.ts",
           "@xerris/calendar-app": "//localhost:9003/xerris-calendar-app.js",
           "@xerris/utility-app": "//localhost:9004/xerris-utility-app.js",
           "@xerris/pricing-calculator": "//localhost:9005/xerris-pricing-calculator.js",

@@ -1,6 +1,6 @@
 {
   "extends": "ts-config-single-spa",
-  "files": ["src/xerris-root-config.ts"],
+  "files": ["src/xerris-root-config.js"],
   "compilerOptions": {
     "declarationDir": "dist"
   },
