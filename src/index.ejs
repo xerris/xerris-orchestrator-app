@@ -6,9 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <title>Xerris Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
-    <script type="module" src="http://localhost:9002/src/xerris-auth-app.ts"></script>
-
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self' https: localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: localhost:* https://xerris-dashboard-5d23c.web.app; connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' https:; object-src 'none';"
@@ -38,19 +35,7 @@
     />
 
     <% if (isLocal) { %>
-    <script type="systemjs-importmap">
-      {
-        "imports": {
-          "@xerris/root-config": "//localhost:9000/xerris-root-config.js",
-          "@xerris/sidebar-app": "//localhost:9001/xerris-sidebar-app.js",
-          "@xerris/auth-app": "//localhost:9002/src/xerris-auth-app.ts",
-          "@xerris/calendar-app": "//localhost:9003/xerris-calendar-app.js",
-          "@xerris/utility-app": "//localhost:9004/xerris-utility-app.js",
-          "@xerris/pricing-calculator": "//localhost:9005/xerris-pricing-calculator.js",
-          "@xerris/home-app": "//localhost:9006/xerris-home-app.js"
-        }
-      }
-    </script>
+  <script type="systemjs-importmap" src="../import-map.json"></script>
     <% } else if (!isLocal && !isProd) { %>
     <script type="systemjs-importmap">
       {

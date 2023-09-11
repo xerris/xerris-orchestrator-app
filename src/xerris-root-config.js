@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import { LifeCycles, registerApplication, start } from "single-spa";
 
+const module = "@xerris/auth-app";
+
 registerApplication({
   name: "@xerris/auth-app",
   app: () =>
     import(
       /* webpackIgnore: true */
-      "http://localhost:9002/src/xerris-auth-app.ts"
+      module
     ),
   activeWhen: [(location) => location.pathname === "/"],
 });
