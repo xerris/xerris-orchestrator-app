@@ -1,8 +1,20 @@
 {
-  "extends": "ts-config-single-spa",
-  "files": ["src/xerris-root-config.js"],
+  "files": ["src/xerris-root-config.ts"],
   "compilerOptions": {
-    "declarationDir": "dist"
+    "esModuleInterop": true,
+    "module": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015",
+      "es2015.promise",
+      "es2016.array.include",
+      "es2018"
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test*"]

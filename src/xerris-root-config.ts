@@ -1,17 +1,23 @@
 /* eslint-disable no-console */
-import { LifeCycles, registerApplication, start } from "single-spa";
+import { registerApplication, start } from "single-spa";
 
-const module = "@xerris/auth-app";
+const authModule = "@xerris/auth-app";
 
-registerApplication({
-  name: "@xerris/auth-app",
-  app: () =>
-    import(
-      /* webpackIgnore: true */
-      module
-    ),
-  activeWhen: [(location) => location.pathname === "/"],
-});
+export function runSpas() {
+  registerApplication({
+    name: "@xerris/auth-app",
+    app: () =>
+      import(
+        /* @vite-ignore */
+        authModule
+      ),
+    activeWhen: [(location) => location.pathname === "/"],
+  });
+
+  start();
+}
+
+runSpas();
 
 // registerApplication({
 //   name: "@xerris/sidebar-app",
@@ -36,7 +42,3 @@ registerApplication({
 //   app: () => System.import("@xerris/home-app"),
 //   activeWhen: ["/home"],
 // });
-
-start({
-  urlRerouteOnly: true,
-});
