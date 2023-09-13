@@ -2,6 +2,7 @@
 import { registerApplication, start } from "single-spa";
 
 const authModule = "@xerris/auth-app";
+const calendarModule = "@xerris/calendar-app";
 
 export function runSpas() {
   registerApplication({
@@ -10,6 +11,16 @@ export function runSpas() {
       import(
         /* @vite-ignore */
         authModule
+      ),
+    activeWhen: [(location) => location.pathname === "/"],
+  });
+
+  registerApplication({
+    name: "@xerris/calendar-app",
+    app: () =>
+      import(
+        /* @vite-ignore */
+        calendarModule
       ),
     activeWhen: [(location) => location.pathname === "/"],
   });
