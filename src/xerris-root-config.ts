@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { registerApplication, start } from "single-spa";
+import { LifeCycles, registerApplication, start } from "single-spa";
 
 const authModule = "@xerris/auth-app";
 const calendarModule = "@xerris/calendar-app";
@@ -7,23 +7,19 @@ const calendarModule = "@xerris/calendar-app";
 export function runSpas() {
   registerApplication({
     name: "@xerris/auth-app",
-    app: () =>
-      import(
-        /* @vite-ignore */
-        authModule
-      ),
+    app: () => System.import<LifeCycles>(authModule),
     activeWhen: [(location) => location.pathname === "/"],
   });
 
-  registerApplication({
-    name: "@xerris/calendar-app",
-    app: () =>
-      import(
-        /* @vite-ignore */
-        calendarModule
-      ),
-    activeWhen: [(location) => location.pathname === "/"],
-  });
+  // registerApplication({
+  //   name: "@xerris/calendar-app",
+  //   app: () =>
+  //     import(
+  //       /* @vite-ignore */
+  //       calendarModule
+  //     ),
+  //   activeWhen: [(location) => location.pathname === "/"],
+  // });
 
   start();
 }
