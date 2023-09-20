@@ -10,7 +10,7 @@ export default defineConfig({
   build: {
     target: "es2022",
     rollupOptions: {
-      input: "./src/xerris-root-config.ts",
+      input: ["./src/xerris-root-config.ts"],
       preserveEntrySignatures: "exports-only",
       output: {
         exports: "auto",

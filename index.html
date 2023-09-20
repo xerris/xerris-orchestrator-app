@@ -5,19 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
+    <!-- get systemjs -->
     <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/system.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/extras/amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
   </head>
   <body>
     <script type="systemjs-importmap">
       {
         "imports": {
-          "@xerris/root-config": "./xerris-root-config.ts",
-          "@xerris/auth-app": "http://localhost:9002/xerris-auth-app-esm.js ",
-          "@xerris/calendar-app": "http://localhost:9003/src/xerris-calendar-app.ts"
+          "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
+          "react": "https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.min.js",
+          "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.min.js"
         }
       }
     </script>
+    <script
+      type="systemjs-importmap"
+      src="./import-maps/local.import-map.json"
+    ></script>
     <script type="module">
       (function (global) {
         const systemJSPrototype = global.System.constructor.prototype;
@@ -37,7 +43,7 @@
           return originalInstantiate.apply(this, arguments).then((register) => {
             // use native import for ESM modules
             if (isEsm) {
-              return import(url).then((m) => [
+              return import(/* @vite-ignore */ url).then((m) => [
                 [],
                 (_export) => (_export(m), {}),
               ]);
