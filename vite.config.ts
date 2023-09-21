@@ -42,7 +42,9 @@ export default defineConfig(({ mode }) => {
         input: ["./src/xerris-root-config.ts"],
         preserveEntrySignatures: "exports-only",
         output: {
+          format: "system",
           exports: "auto",
+          entryFileNames: "[name].js",
         },
       },
     },
