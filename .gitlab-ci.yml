@@ -1,0 +1,67 @@
+default:
+  tags:
+    - docker-node-runner
+# setup Aws access
+stages:
+  - build
+  - deploy
+
+linter:
+  - image: node:14
+  - stage: .pre
+  - cache:
+      - key: orchestrator-cache-$CI_COMMIT_REF_SLUG
+      - paths:
+          - node_modules
+  - script:
+      - npm install
+      - npm run lint
+
+unit_test:
+  - image: node:14
+  - stage: .pre
+  - script:
+      - echo "TODO SETUP VITEST"
+
+build_orchestrator:
+  - image: node:14
+  - stage: build
+  - cache:
+      - key: orchestrator-cache-$CI_COMMIT_REF_SLUG
+      - paths:
+          - node_modules
+  - artifacts:
+      - paths:
+          - dist
+  - script:
+      - npm install
+      - npm run build
+
+build-infrastructure:
+  - image: node:14
+  - stage: build
+  - cache:
+      - key: infrastructure-cache-$CI_COMMIT_REF_SLUG
+      - paths:
+          - infrastructure/node_modules
+  - artifacts:
+      - paths:
+          - infrastructure/bin/
+  - script:
+      - cd infrastructure
+      - npm install
+      - npm run build
+
+deploy:
+  - image: amazon/aws-cli:2.4.11
+  - stage: deploy
+  - only:
+      - main
+  - cache:
+      - key: infrastructure-cache-$CI_COMMIT_REF_SLUG
+      - paths:
+          - infrastructure/node_modules
+  - script:
+      - cd infrastructure
+      # - npm run deploy
+      - npm run synth
