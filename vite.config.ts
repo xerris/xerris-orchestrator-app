@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -35,6 +37,10 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       port: 9000,
+    },
+    test: {
+      globals: true,
+      environment: "jsdom",
     },
     build: {
       target: "es2022",

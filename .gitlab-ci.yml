@@ -7,7 +7,7 @@ stages:
   - deploy
 
 linter:
-  - image: node:14
+  - image: node:18
   - stage: .pre
   - cache:
       - key: orchestrator-cache-$CI_COMMIT_REF_SLUG
@@ -18,13 +18,18 @@ linter:
       - npm run lint
 
 unit_test:
-  - image: node:14
+  - image: node:18
   - stage: .pre
+  - cache:
+      - key: orchestrator-cache-$CI_COMMIT_REF_SLUG
+      - paths:
+          - node_modules
   - script:
-      - echo "TODO SETUP VITEST"
+      - npm install
+      - npm run test
 
 build_orchestrator:
-  - image: node:14
+  - image: node:18
   - stage: build
   - cache:
       - key: orchestrator-cache-$CI_COMMIT_REF_SLUG
@@ -38,7 +43,7 @@ build_orchestrator:
       - npm run build
 
 build-infrastructure:
-  - image: node:14
+  - image: node:18
   - stage: build
   - cache:
       - key: infrastructure-cache-$CI_COMMIT_REF_SLUG
