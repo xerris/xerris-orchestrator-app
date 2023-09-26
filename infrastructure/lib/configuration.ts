@@ -6,6 +6,7 @@ export interface Configuration {
   readonly env: Environment;
 }
 
+// NOTE THIS IS NOT USED RIGHT NOW
 const commonConfig = {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,

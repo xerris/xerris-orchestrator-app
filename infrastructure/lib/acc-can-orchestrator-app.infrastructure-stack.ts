@@ -9,6 +9,8 @@ import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Construct } from "constructs";
 import { Configuration } from "./configuration";
 
+const ACCOLITE_RESOURCE_NAME = "acc-can-orchestrator";
+
 export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
   config: Configuration;
 
@@ -19,9 +21,9 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
     // make s3 bucket
     const s3Site = new s3.Bucket(
       this,
-      `acc-can-orchestrator-s3site-${this.config.stageName}`,
+      `${ACCOLITE_RESOURCE_NAME}-s3site-${this.config.stageName}`,
       {
-        bucketName: `acc-can-orchestrator-s3site-${this.config.stageName}`,
+        bucketName: `${ACCOLITE_RESOURCE_NAME}-s3site-${this.config.stageName}`,
         publicReadAccess: true,
         websiteIndexDocument: "index.html",
         websiteErrorDocument: "index.html",
@@ -37,7 +39,7 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
 
     const distribution = new cloudFront.Distribution(
       this,
-      `acc-can-orchestrator-cf-distribution-${this.config.stageName}`,
+      `${ACCOLITE_RESOURCE_NAME}-cf-distribution-${this.config.stageName}`,
       {
         defaultBehavior: {
           origin: new S3Origin(s3Site),
@@ -46,14 +48,14 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
         },
         // NOTE: Commented out till we add a domain
         // certificate: certificate,
-        comment: `${this.config.stageName}-acc-can-orchestrator - CloudFront Distribution`,
+        comment: `${this.config.stageName}-${ACCOLITE_RESOURCE_NAME} - CloudFront Distribution`,
       }
     );
 
     // Setup Bucket Deployment to automatically deploy new assets and invalidate cache
     new s3deploy.BucketDeployment(
       this,
-      `acc-can-orchestrator-bucket-deployment-${this.config.stageName}`,
+      `${ACCOLITE_RESOURCE_NAME}-bucket-deployment-${this.config.stageName}`,
       {
         sources: [s3deploy.Source.asset("../dist")],
         destinationBucket: s3Site,

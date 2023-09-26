@@ -5,8 +5,9 @@ import { AccCanOrchestratorInfrastructureStack } from "../lib/acc-can-orchestrat
 import { configuration } from "./configuration";
 
 const app = new cdk.App();
+
 const buildEnv = app.node.tryGetContext("env").trim().toLowerCase();
-console.log(buildEnv);
+
 new AccCanOrchestratorInfrastructureStack(
   app,
   `acc-can-orchestrator-${buildEnv}`,
