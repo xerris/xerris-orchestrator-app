@@ -68,11 +68,12 @@ jobs:
     steps:
       - checkout
       - *load-dependency-cache
+      - *install-bundle-dependencies
       - run: mkdir ~/workspace
       - *build-bundle
       - persist_to_workspace:
           root: ~/
-          path: workspace
+          paths: workspace
 
   build-infrastructure:
     executor: default
@@ -96,7 +97,7 @@ jobs:
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
           root: ~/
-          path: workspace
+          paths: workspace
 
   deploy-to-aws:
     executor: default
