@@ -70,7 +70,7 @@ jobs:
       - *build-bundle
       - persist_to_workspace:
           root: ~/
-          path: ./dist
+          path: ./project/dist
 
   build-infrastructure:
     executor: default
@@ -93,7 +93,7 @@ jobs:
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
           root: ~/
-          path: ./infrastructure/bin
+          path: .project/infrastructure/bin
 
   deploy-to-aws:
     executor: default
