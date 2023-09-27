@@ -1,3 +1,4 @@
+version: 2.1
 executors:
   default:
     docker:
@@ -68,11 +69,11 @@ jobs:
       - *load-dependency-cache
       - *build-bundle
       - store_artifacts:
-        path: ./dist
+          path: ./dist
 
   build-infrastructure:
     executor: default
-    paramters:
+    parameters:
       environment:
         type: string
     steps:
@@ -90,7 +91,7 @@ jobs:
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
       - store_artifacts:
-        path: ./infrastructure/bin
+          path: ./infrastructure/bin
 
   deploy-to-aws:
     executor: default
@@ -99,13 +100,12 @@ jobs:
       - *load-dependency-cache
       - *configure-aws-access
       - run:
-        name: Deploy to AWS
-        command: |
-          cd infrastructure
-          cdk deploy
+          name: Deploy to AWS
+          command: |
+            cd infrastructure
+            cdk deploy
 
 workflows:
-  version: 2
   ci-dev:
     jobs:
       - test
@@ -119,7 +119,7 @@ workflows:
           filters:
             branches:
               only:
-                - [master, main]
+                - master
       - deploy-to-aws:
           requires:
             - build-bundle
@@ -127,4 +127,4 @@ workflows:
           filters:
             branches:
               only:
-                - [master, main]
+                - master
