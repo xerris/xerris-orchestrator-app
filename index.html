@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!-- get systemjs -->
+    <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/system.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/extras/amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
+  </head>
+  <body>
+    <script type="systemjs-importmap" src="./import-map.json"></script>
+    <script type="module">
+      (function (global) {
+        const systemJSPrototype = global.System.constructor.prototype;
+
+        const originalCreateScript = systemJSPrototype.createScript;
+        systemJSPrototype.createScript = function () {
+          return Object.assign(originalCreateScript.apply(this, arguments), {
+            type: "module",
+          });
+        };
+
+        // override SystemJS behaviour when dynamically importing
+        const originalInstantiate = systemJSPrototype.instantiate;
+        systemJSPrototype.instantiate = function (url) {
+          const isEsm = url.includes(".ts");
+
+          return originalInstantiate.apply(this, arguments).then((register) => {
+            // use native import for ESM modules
+            if (isEsm) {
+              return import(/* @vite-ignore */ url).then((m) => [
+                [],
+                (_export) => (_export(m), {}),
+              ]);
+            }
+
+            // default to using SystemJS for non ESM modules (likely the system type)
+            return register;
+          });
+        };
+      })(typeof self !== "undefined" ? self : global);
+    </script>
+    <script type="module" src="./src/xerris-root-config.ts"></script>
+  </body>
+</html>

@@ -1,93 +1,129 @@
+version: 2.1
+executors:
+  default:
+    docker:
+      - image: cimg/node:18.18.0
+
 anchors:
-  configure-build-environment: &configure-build-environment
+  configure-aws-access: &configure-aws-access
     run:
-      name: Configure
+      name: Configure AWS access
       command: |
-        yarn install
-  configure-run-build: &configure-run-build
+        mkdir -p ~/.aws
+        file=~/.aws/credentials
+        echo "[default]" > $file
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> $file
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> $file
+
+  install-bundle-dependencies: &install-bundle-dependencies
     run:
-      name: Configure
+      name: Install Infrastructure Depedencies
       command: |
-        yarn build
-  run-tests: &run-tests
+        npm install
+
+  unit-tests: &unit-tests
     run:
-      name: Test
+      name: Run Unit Tests
       command: |
-        yarn test
+        npm run test
+
+  build-bundle: &build-bundle
+    run:
+      name: Build Bundle
+      command: |
+        npm run build
+
+  install-infrastructure-dependencies: &install-infrastructure-dependencies
+    run:
+      name: Install Infrastructure Depedencies
+      command: |
+        cd infrastructure
+        npm install
+
   cache-dependencies: &cache-dependencies
     save_cache:
       key: dependency-cache-{{ checksum "package.json" }}
       paths:
         - ./node_modules
+        - ./infrastructure/node_modules
+
   load-dependency-cache: &load-dependency-cache
     restore_cache:
       key: dependency-cache-{{ checksum "package.json" }}
-  run-deploy: &run-deploy
-    run:
-      name: deploy
-      command: |
-        ./node_modules/.bin/firebase use orchestrator-dev
-        ./node_modules/.bin/firebase deploy --only hosting --token=$FIREBASE_TOKEN --non-interactive
 
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
-
-executors:
-  default:
-    docker:
-      - image: cimg/node:17.3
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   test:
     executor: default
     steps:
       - checkout
       - *load-dependency-cache
-      - *configure-build-environment
+      - *install-bundle-dependencies
       - *cache-dependencies
-      - *run-tests
-  build:
-    executor: default
-    steps:
-      - checkout
-      - *load-dependency-cache
-      - *configure-build-environment
-      - *cache-dependencies
-      - *configure-run-build
-  build-deploy:
-    executor: default
-    steps:
-      - checkout
-      - *load-dependency-cache
-      - *configure-build-environment
-      - *cache-dependencies
-      - *configure-run-build
-      - *run-deploy
+      - *unit-tests
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  ## TODO ADD LINT STEP
+  build-bundle:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *build-bundle
+      - store_artifacts:
+          path: ./dist
+
+  build-infrastructure:
+    executor: default
+    parameters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *install-infrastructure-dependencies
+      - run:
+          name: Build Infrastructure
+          command: |
+            cd infrastructure
+            ENV=<< parameters.environment >> npm run build
+      - run:
+          name: Synth CloudFormation
+          command: |
+            cd infrastructure
+            ENV=<< parameters.environment >> npm run synth
+      - store_artifacts:
+          path: ./infrastructure/bin
+
+  deploy-to-aws:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *configure-aws-access
+      - run:
+          name: Deploy to AWS
+          command: |
+            cd infrastructure
+            cdk deploy
+
 workflows:
-  version: 2
   ci-dev:
     jobs:
-      - test:
-          context: xerris-dev
-          filters:
-            branches:
-              ignore:
-                - master
-      - build:
-          context: xerris-dev
+      - test
+      - build-bundle:
+          requires:
+            - test
+      - build-infrastructure:
+          environment: production
           requires:
             - test
           filters:
             branches:
-              ignore:
+              only:
                 - master
-      - build-deploy:
-          context: xerris-dev
+      - deploy-to-aws:
+          requires:
+            - build-bundle
+            - build-infrastructure
           filters:
             branches:
               only:

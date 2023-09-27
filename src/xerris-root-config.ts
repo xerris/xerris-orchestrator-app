@@ -1,36 +1,47 @@
 /* eslint-disable no-console */
-import { registerApplication, start } from "single-spa";
+import { LifeCycles, registerApplication, start } from "single-spa";
 
-registerApplication({
-  name: "@single-spa/auth-app",
-  app: () => System.import("@xerris/auth-app"),
-  activeWhen: [(location) => location.pathname === "/"],
-});
+const authModule = "@xerris/auth-app";
+const calendarModule = "@xerris/calendar-app";
+const sideBarModule = "@xerris/sidebar-app";
+const homeModule = "@xerris/home-app";
 
-registerApplication({
-  name: "@xerris/sidebar-app",
-  app: () => System.import("@xerris/sidebar-app"),
-  activeWhen: [(location) => location.pathname !== "/"],
-});
+export function runSpas() {
+  registerApplication({
+    name: "@xerris/auth-app",
+    app: () => System.import<LifeCycles>(authModule),
+    activeWhen: [(location) => location.pathname === "/"],
+  });
 
-registerApplication({
-  name: "@xerris/calendar-app",
-  app: () => System.import("@xerris/calendar-app"),
-  activeWhen: ["calendar"],
-});
+  registerApplication({
+    name: "@xerris/calendar-app",
+    app: () =>
+      System.import<LifeCycles>(
+        /* @vite-ignore */
+        calendarModule
+      ),
+    activeWhen: [(location) => location.pathname === "/calendar"],
+  });
 
-registerApplication({
-  name: "@xerris/pricing-calculator",
-  app: () => System.import("@xerris/pricing-calculator"),
-  activeWhen: ["/pricing-calculator"],
-});
+  registerApplication({
+    name: "@xerris/sidebar-app",
+    app: () => System.import<LifeCycles>(sideBarModule),
+    activeWhen: [(location) => location.pathname !== "/"],
+  });
 
-registerApplication({
-  name: "@xerris/home-app",
-  app: () => System.import("@xerris/home-app"),
-  activeWhen: ["/home"],
-});
+  registerApplication({
+    name: "@xerris/home-app",
+    app: () => System.import<LifeCycles>(homeModule),
+    activeWhen: ["/home"],
+  });
 
-start({
-  urlRerouteOnly: true,
-});
+  // registerApplication({
+  //   name: "@xerris/pricing-calculator",
+  //   app: () => System.import("@xerris/pricing-calculator"),
+  //   activeWhen: ["/pricing-calculator"],
+  // });
+
+  start();
+}
+
+runSpas();
