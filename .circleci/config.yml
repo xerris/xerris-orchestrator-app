@@ -92,6 +92,8 @@ jobs:
       - checkout
       - *load-dependency-cache
       - *install-infrastructure-dependencies
+      - attach_workspace:
+          at: ~/
       - run:
           name: Configure bundle
           command: |
