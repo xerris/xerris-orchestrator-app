@@ -92,6 +92,7 @@ jobs:
       - checkout
       - *load-dependency-cache
       - *install-infrastructure-dependencies
+      - *cache-dependencies
       - attach_workspace:
           at: ~/
       - run:
