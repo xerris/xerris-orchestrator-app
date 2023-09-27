@@ -32,6 +32,7 @@ anchors:
       name: Build Bundle
       command: |
         npm run build
+        cp -r dist ~/workspace
 
   install-infrastructure-dependencies: &install-infrastructure-dependencies
     run:
@@ -61,15 +62,26 @@ jobs:
       - *cache-dependencies
       - *unit-tests
 
+  lint:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *install-bundle-dependencies
+      - run: npm run lint
+
   ## TODO ADD LINT STEP
   build-bundle:
     executor: default
     steps:
       - checkout
       - *load-dependency-cache
+      - *install-bundle-dependencies
+      - run: mkdir ~/workspace
       - *build-bundle
-      - store_artifacts:
-          path: ./dist
+      - persist_to_workspace:
+          root: ~/
+          paths: workspace
 
   build-infrastructure:
     executor: default
@@ -85,13 +97,15 @@ jobs:
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run build
+            cp -r infrastructure/bin workspace/bin
       - run:
           name: Synth CloudFormation
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
-      - store_artifacts:
-          path: ./infrastructure/bin
+      - persist_to_workspace:
+          root: ~/
+          paths: workspace
 
   deploy-to-aws:
     executor: default
@@ -102,6 +116,7 @@ jobs:
       - run:
           name: Deploy to AWS
           command: |
+            cp -r ~/workspace/bin infrastructure/bin
             cd infrastructure
             cdk deploy
 
@@ -109,6 +124,7 @@ workflows:
   ci-dev:
     jobs:
       - test
+      - lint
       - build-bundle:
           requires:
             - test
