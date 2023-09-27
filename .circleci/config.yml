@@ -92,8 +92,6 @@ jobs:
       - checkout
       - *load-dependency-cache
       - *install-infrastructure-dependencies
-      - run: cd ..
-      - *cache-dependencies
       - attach_workspace:
           at: ~/
       - run:
@@ -122,8 +120,7 @@ jobs:
         type: string
     steps:
       - checkout
-      - *load-dependency-cache
-      - *configure-aws-access
+      - *install-infrastructure-dependencies
       - attach_workspace:
           at: ~/
       - run:
