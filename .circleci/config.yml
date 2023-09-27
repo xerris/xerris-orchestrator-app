@@ -1,0 +1,130 @@
+executors:
+  default:
+    docker:
+      - image: cimg/node:17.3
+
+anchors:
+  configure-aws-access: &configure-aws-access
+    run:
+      name: Configure AWS access
+      command: |
+        mkdir -p ~/.aws
+        file=~/.aws/credentials
+        echo "[default]" > $file
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> $file
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> $file
+
+  install-bundle-dependencies: &install-bundle-dependencies
+    run:
+      name: Install Infrastructure Depedencies
+      command: |
+        npm install
+
+  unit-tests: &unit-tests
+    run:
+      name: Run Unit Tests
+      command: |
+        npm run test
+
+  build-bundle: &build-bundle
+    run:
+      name: Build Bundle
+      command: |
+        npm build
+
+  install-infrastructure-dependencies: &install-infrastructure-dependencies
+    run:
+      name: Install Infrastructure Depedencies
+      command: |
+        cd infrastructure
+        npm install
+
+  cache-dependencies: &cache-dependencies
+    save_cache:
+      key: dependency-cache-{{ checksum "package.json" }}
+      paths:
+        - ./node_modules
+        - ./infrastructure/node_modules
+
+  load-dependency-cache: &load-dependency-cache
+    restore_cache:
+      key: dependency-cache-{{ checksum "package.json" }}
+
+jobs:
+  test:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *install-bundle-dependencies
+      - *cache-dependencies
+      - *unit-tests
+
+  ## TODO ADD LINT STEP
+  build-bundle:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *build-bundle
+      - store_artifacts:
+        path: ./dist
+
+  build-infrastructure:
+    executor: default
+    paramters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *install-infrastructure-dependencies
+      - run:
+          name: Build Infrastructure
+          command: |
+            cd infrastructure
+            ENV=<< parameters.environment >> npm run build
+      - run:
+          name: Synth CloudFormation
+          command: |
+            cd infrastructure
+            ENV=<< parameters.environment >> npm run synth
+      - store_artifacts:
+        path: ./infrastructure/bin
+
+  deploy-to-aws:
+    executor: default
+    steps:
+      - checkout
+      - *load-dependency-cache
+      - *configure-aws-access
+      - run:
+        name: Deploy to AWS
+        command: |
+          cd infrastructure
+          cdk deploy
+
+workflows:
+  version: 2
+  ci-dev:
+    jobs:
+      - test
+      - build-bundle:
+          requires:
+            - test
+      - build-infrastructure:
+          environment: production
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - [master, main]
+      - deploy-to-aws:
+          requires:
+            - build-bundle
+            - build-infrastructure
+          filters:
+            branches:
+              only:
+                - [master, main]
