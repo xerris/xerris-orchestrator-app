@@ -71,7 +71,7 @@ jobs:
       - run: mkdir ~/workspace
       - *build-bundle
       - persist_to_workspace:
-          root: workspace
+          root: ~/workspace
           path: dist
 
   build-infrastructure:
@@ -95,7 +95,7 @@ jobs:
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
-          root: workspace
+          root: ~/workspace
           path: bin
 
   deploy-to-aws:
