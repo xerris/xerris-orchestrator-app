@@ -119,10 +119,13 @@ jobs:
       - checkout
       - *load-dependency-cache
       - *configure-aws-access
+      - attach_workspace:
+          at: ~/
       - run:
           name: Deploy to AWS
           command: |
             cp -r ~/workspace/bin infrastructure/bin
+            cp -r ~/workspace/dist dist
             cd infrastructure
             cdk deploy
 
