@@ -31,7 +31,7 @@ anchors:
     run:
       name: Build Bundle
       command: |
-        npm build
+        npm run build
 
   install-infrastructure-dependencies: &install-infrastructure-dependencies
     run:
