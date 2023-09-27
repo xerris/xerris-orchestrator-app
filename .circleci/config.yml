@@ -97,12 +97,12 @@ jobs:
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run build
-            cp -r infrastructure/bin workspace/bin
       - run:
           name: Synth CloudFormation
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
+            cp -r infrastructure/bin ~/workspace/bin
       - persist_to_workspace:
           root: ~/
           paths: workspace
@@ -132,6 +132,7 @@ workflows:
           environment: production
           requires:
             - test
+            - build-bundle
           filters:
             branches:
               only:
