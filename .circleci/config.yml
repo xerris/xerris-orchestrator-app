@@ -95,7 +95,7 @@ jobs:
       - run:
           name: Configure bundle
           command: |
-            cp -r ~workspace/dist ~/project/dist
+            cp -r ~/workspace/dist ~/project/dist
       - run:
           name: Build Infrastructure
           command: |
