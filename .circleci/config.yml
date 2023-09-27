@@ -32,7 +32,7 @@ anchors:
       name: Build Bundle
       command: |
         npm run build
-        cp -r dist ~/work_space
+        cp -r dist ~/workspace
 
   install-infrastructure-dependencies: &install-infrastructure-dependencies
     run:
@@ -68,7 +68,7 @@ jobs:
     steps:
       - checkout
       - *load-dependency-cache
-      - run: mkdir workspace
+      - run: mkdir ~/workspace
       - *build-bundle
       - persist_to_workspace:
           root: workspace
