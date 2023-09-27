@@ -1,8 +1,8 @@
 {
   "imports": {
     "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
-    "react": "https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.min.js",
-    "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.min.js",
+    "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js",
+    "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.min.js",
     "@xerris/root-config": "",
     "@xerris/sidebar-app": "",
     "@xerris/auth-app": "",

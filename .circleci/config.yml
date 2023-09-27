@@ -2,7 +2,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/node:17.3
+      - image: cimg/node:18.18.0
 
 anchors:
   configure-aws-access: &configure-aws-access

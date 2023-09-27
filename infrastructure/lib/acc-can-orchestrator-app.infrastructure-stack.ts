@@ -30,7 +30,7 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
       }
     );
 
-    // NOTE: Commented out till we get a domain
+    // NOTE: commented out because we don't have a cert
     // const certificate = acm.Certificate.fromCertificateArn(
     //   this,
     //   "Certificate",
@@ -46,7 +46,7 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
           viewerProtocolPolicy:
             cloudFront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         },
-        // NOTE: Commented out till we add a domain
+        // NOTE: Commented out till we add a cert
         // certificate: certificate,
         comment: `${this.config.stageName}-${ACCOLITE_RESOURCE_NAME} - CloudFront Distribution`,
       }
