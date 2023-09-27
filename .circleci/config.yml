@@ -69,7 +69,7 @@ jobs:
       - *load-dependency-cache
       - *build-bundle
       - persist_to_workspace:
-          root: ./
+          root: ~/
           path: ./dist
 
   build-infrastructure:
@@ -92,7 +92,7 @@ jobs:
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
-          root: ./
+          root: ~/
           path: ./infrastructure/bin
 
   deploy-to-aws:
