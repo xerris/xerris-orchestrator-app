@@ -32,6 +32,8 @@ anchors:
       name: Build Bundle
       command: |
         npm run build
+        mkdir ~/work_space
+        cp -r dist ~/work_space
 
   install-infrastructure-dependencies: &install-infrastructure-dependencies
     run:
@@ -70,7 +72,7 @@ jobs:
       - *build-bundle
       - persist_to_workspace:
           root: ~/
-          path: /project/dist
+          path: work_space
 
   build-infrastructure:
     executor: default
@@ -86,6 +88,7 @@ jobs:
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run build
+            cp -r infrastructure/bin work_space/bin
       - run:
           name: Synth CloudFormation
           command: |
@@ -93,7 +96,7 @@ jobs:
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
           root: ~/
-          path: project/infrastructure
+          path: work_space
 
   deploy-to-aws:
     executor: default
@@ -104,6 +107,7 @@ jobs:
       - run:
           name: Deploy to AWS
           command: |
+            cp -r ~/workspace/bin infrastructure/bin
             cd infrastructure
             cdk deploy
 
