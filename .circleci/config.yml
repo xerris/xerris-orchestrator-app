@@ -71,8 +71,8 @@ jobs:
       - *load-dependency-cache
       - *build-bundle
       - persist_to_workspace:
-          root: /home/circleci/workspace
-          path: ~/project/dist
+          root: /home/circleci/
+          path: workspace
 
   build-infrastructure:
     executor: default
@@ -95,8 +95,8 @@ jobs:
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
-          root: /home/circleci/workspace
-          path: ~/project/infrastructure/bin
+          root: /home/circleci/
+          path: workspace
 
   deploy-to-aws:
     executor: default
