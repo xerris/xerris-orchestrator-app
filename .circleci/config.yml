@@ -32,7 +32,6 @@ anchors:
       name: Build Bundle
       command: |
         npm run build
-        mkdir ~/workspace
         cp -r dist ~/work_space
 
   install-infrastructure-dependencies: &install-infrastructure-dependencies
@@ -69,10 +68,11 @@ jobs:
     steps:
       - checkout
       - *load-dependency-cache
+      - run: mkdir workspace
       - *build-bundle
       - persist_to_workspace:
-          root: /home/circleci/
-          path: workspace
+          root: workspace
+          path: dist
 
   build-infrastructure:
     executor: default
@@ -88,15 +88,15 @@ jobs:
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run build
-            cp -r infrastructure/bin work_space/bin
+            cp -r infrastructure/bin workspace/bin
       - run:
           name: Synth CloudFormation
           command: |
             cd infrastructure
             ENV=<< parameters.environment >> npm run synth
       - persist_to_workspace:
-          root: /home/circleci/
-          path: workspace
+          root: workspace
+          path: bin
 
   deploy-to-aws:
     executor: default
