@@ -4,11 +4,6 @@
     "react": "https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.min.js",
     "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.min.js",
     "@xerris/root-config": "//localhost:9000/xerris-root-config.js",
-    "@xerris/sidebar-app": "//localhost:9001/src/xerris-sidebar-app.ts",
-    "@xerris/auth-app": "http://localhost:9002/src/xerris-auth-app.ts",
-    "@xerris/calendar-app": "//localhost:9003/src/xerris-calendar-app.ts",
-    "@xerris/utility-app": "//localhost:9004/src/xerris-utility-app.ts",
-    "@xerris/pricing-calculator": "//localhost:9005/src/xerris-pricing-calculator.ts",
-    "@xerris/home-app": "//localhost:9006/src/xerris-home-app.ts"
+    "@xerris/calendar-app": "//localhost:9003/src/xerris-calendar-app.ts"
   }
 }
