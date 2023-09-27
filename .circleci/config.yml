@@ -115,6 +115,9 @@ jobs:
 
   deploy-to-aws:
     executor: default
+    parameters:
+      environment:
+        type: string
     steps:
       - checkout
       - *load-dependency-cache
@@ -127,7 +130,7 @@ jobs:
             cp -r ~/workspace/bin infrastructure/bin
             cp -r ~/workspace/dist dist
             cd infrastructure
-            cdk deploy
+            ENV=<< parameters.environment >> npm run deploy
 
 workflows:
   ci-dev:
@@ -147,6 +150,7 @@ workflows:
               only:
                 - master
       - deploy-to-aws:
+          environment: production
           requires:
             - build-bundle
             - build-infrastructure
