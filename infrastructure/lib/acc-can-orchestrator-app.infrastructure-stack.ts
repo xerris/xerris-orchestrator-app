@@ -23,6 +23,7 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
       this,
       `${ACCOLITE_RESOURCE_NAME}-s3site-${this.config.stageName}`,
       {
+        versioned: true,
         bucketName: `${ACCOLITE_RESOURCE_NAME}-s3site-${this.config.stageName}`,
         publicReadAccess: true,
         websiteIndexDocument: "index.html",
