@@ -3,7 +3,8 @@ import {
   aws_s3 as s3,
   aws_cloudfront as cloudFront,
   aws_s3_deployment as s3deploy,
-  aws_certificatemanager as acm,
+  aws_iam as iam,
+  RemovalPolicy,
 } from "aws-cdk-lib";
 import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Construct } from "constructs";
@@ -25,9 +26,9 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
       {
         versioned: true,
         bucketName: `${ACCOLITE_RESOURCE_NAME}-s3site-${this.config.stageName}`,
-        publicReadAccess: true,
-        websiteIndexDocument: "index.html",
-        websiteErrorDocument: "index.html",
+        publicReadAccess: false,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+        removalPolicy: RemovalPolicy.DESTROY,
       }
     );
 
@@ -37,13 +38,32 @@ export class AccCanOrchestratorInfrastructureStack extends cdk.Stack {
     //   "Certificate",
     //   this.config.certificateArn
     // );
+    const cloudFrontOAI = new cloudFront.OriginAccessIdentity(
+      this,
+      "cloudfront-OAI"
+    );
+
+    s3Site.addToResourcePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:GetObject"],
+        resources: [s3Site.arnForObjects("*")],
+        principals: [
+          new iam.CanonicalUserPrincipal(
+            cloudFrontOAI.cloudFrontOriginAccessIdentityS3CanonicalUserId
+          ),
+        ],
+      })
+    );
 
     const distribution = new cloudFront.Distribution(
       this,
       `${ACCOLITE_RESOURCE_NAME}-cf-distribution-${this.config.stageName}`,
       {
+        defaultRootObject: "index.html",
         defaultBehavior: {
-          origin: new S3Origin(s3Site),
+          origin: new S3Origin(s3Site, {
+            originAccessIdentity: cloudFrontOAI,
+          }),
           viewerProtocolPolicy:
             cloudFront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         },

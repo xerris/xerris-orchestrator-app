@@ -3,12 +3,7 @@
     "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
     "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js",
     "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.min.js",
-    "@xerris/root-config": "",
-    "@xerris/sidebar-app": "",
-    "@xerris/auth-app": "",
-    "@xerris/calendar-app": "",
-    "@xerris/utility-app": "",
-    "@xerris/pricing-calculator": "",
-    "@xerris/home-app": ""
+    "@xerris/root-config": "https://d3zmjos9cnv70.cloudfront.net/xerris-root-config.js",
+    "@xerris/calendar-app": ""
   }
 }

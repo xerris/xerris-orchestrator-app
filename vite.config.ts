@@ -34,6 +34,14 @@ export default defineConfig(({ mode }) => {
           },
         ],
       }),
+      viteStaticCopy({
+        targets: [
+          {
+            src: `./index.html`,
+            dest: "",
+          },
+        ],
+      }),
     ],
     server: {
       port: 9000,

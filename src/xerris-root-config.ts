@@ -11,7 +11,7 @@ export function runSpas() {
         /* @vite-ignore */
         calendarModule
       ),
-    activeWhen: [(location) => location.pathname === "/calendar"],
+    activeWhen: [(location) => location.pathname === "/"],
   });
 
   start();
