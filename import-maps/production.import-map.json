@@ -4,6 +4,6 @@
     "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js",
     "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.min.js",
     "@xerris/root-config": "https://d3zmjos9cnv70.cloudfront.net/xerris-root-config.js",
-    "@xerris/calendar-app": ""
+    "@xerris/calendar-app": "https://dvsy7lo39oj0l.cloudfront.net/xerris-calendar-app.js"
   }
 }
